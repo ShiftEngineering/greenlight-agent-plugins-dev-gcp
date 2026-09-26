@@ -326,9 +326,10 @@ The standard new-app loop:
    through Greenlight with `mergePullRequest({ app_id, pull_request_number, expected_head_sha:
 commit_sha })` or `greenlight pr merge` — **never** `gh pr merge` or the GitHub API. Merge fails
    closed if the PR has moved past that SHA (a new push landed) or that SHA hasn't passed; re-poll
-   `getPipelineRun` on the new head and retry. If it fails with `scm.branch_behind`, another PR
-   landed on `main` first: merge `origin/main` into your branch (see _Sync with `main` before
-   editing_), push, wait for the new head to pass, and merge that SHA. An empty retrigger commit does
+   `getPipelineRun` on the new head and retry. If it fails with `scm.branch_behind`, `main` moved
+   on after you branched (another PR landed, or Greenlight updated the generated workflow): merge
+   `origin/main` into your branch (see _Sync with `main` before editing_), resolve any conflicts,
+   push, wait for the new head to pass, and merge that SHA. An empty retrigger commit does
    not help, because the branch is still behind. **The merge is the apply trigger** — it provisions
    declared resources, reconciles grants, builds and rolls out the workload. Don't stop to ask the
    user whether to merge: if they asked for the change to go live, a green pipeline is your signal to
